@@ -63,7 +63,7 @@
 #             Pauli Fält and myself.
 #             -- Joni Hyttinen
 #
-# from __future__ import annotations
+from __future__ import annotations
 
 import warnings
 from pathlib import Path
@@ -72,7 +72,7 @@ from typing import Optional, Any
 import numpy as np
 from tifffile import TiffFile, TiffWriter
 
-# from yaml import load, dump
+from yaml import load, dump
 try:
     from yaml import CLoader as Loader, CDumper as Dumper
 except ImportError:

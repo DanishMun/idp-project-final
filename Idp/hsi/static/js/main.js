@@ -1,6 +1,6 @@
 (function ($)
   { "use strict"
-  var URL = "http:/localhost:8000/";
+  var URL = "http://localhost:8000/";
   
 /* 1. Proloder */
     $(window).on('load', function () {
@@ -322,18 +322,24 @@ $('.close-icon').click(function(){
   $('.extra-inofo-bar').removeClass('info-open');
 })
 
-$('#imgdetails').click(function(){
-    var filename = $this.val();
+$('.imgdetail').click(function(){
+    var filename = $(this).find('#imgdetails').text();
+    window.location.href = URL + 'showmultiframe/' + filename;
 
-    $.ajax({
-        url: URL + 'showmultiframe/' + filename,
-        type: "POST",
-
-    }).done(function (data) {
-        console.log(data);
-    });
+//    $.ajax({
+//        url: URL + 'showmultiframe/' + filename,
+//        type: "POST",
+//
+//    }).done(function (data) {
+//        console.log(data);
+//    });
 
 })
+
+$(document).ready(function() {
+$('.slideritem:first-child').addClass('active');
+$('.bulletlink:first-child').addClass('active');
+});
 
 
 

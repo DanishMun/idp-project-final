@@ -1,8 +1,10 @@
 from django.shortcuts import render, redirect
 from PIL import Image, ImageSequence
+from django.views.decorators.csrf import csrf_exempt
 from os.path import dirname, abspath
 from .models import BinaryImages, MaskImages
-# from .spectral_tiffs import read_stiff
+from .spectral_tiffs import read_stiff
+from django.core.exceptions import ObjectDoesNotExist
 import numpy as np
 import os, io
 
@@ -28,9 +30,11 @@ def show_images(request, filename):
             break
     return render(request, 'hsi/home.html', {'imageurls': imageurls})
 
+@csrf_exempt
 def show_multiframe(request, filename):
     images = []
     imagenames = []
+
     app_path = dirname(abspath(__file__))
     spectralimg = BinaryImages.objects.all()
     for img in spectralimg:
@@ -39,28 +43,42 @@ def show_multiframe(request, filename):
     filepath = app_path + '\static\images' + '\\'
     maskpath = '/static/images/masks/'
     img = Image.open(filepath + filename)
-    # cube, wavelengths, preview_image, metadata = read_stiff(filepath + filename)
+    cube, wavelengths, preview_image, metadata = read_stiff(filepath + filename)
+    try:
+        img_inst = BinaryImages.objects.get(filename=filename)
+    except ObjectDoesNotExist:
+        img_inst = None
+        pass
+
+    if img_inst:
+        img_inst.cube = str(cube)
+        img_inst.wavelength = str(wavelengths)
+        img_inst.metadata = str(metadata)
+        img_inst.save()
+
     for i, page in enumerate(ImageSequence.Iterator(img)):
         try:
             img.seek(i)
-            img.save(filepath + 'masks\\' + str(i) + filename.replace('.tif', '.png'), format='png')
-            images.append(maskpath + str(i) + filename.replace('.tif', '.png'))
+            img.save(filepath + 'masks\\' + str(i) + filename.replace(' ','+').replace('.tif', '.png'), format='png')
+            urlpath = maskpath + str(i) + filename.replace(' ','+').replace('.tif', '.png')
+            images.append(urlpath)
+            if img_inst:
+                maskimg = MaskImages(linkimage=img_inst, url=urlpath)
+                maskimg.save()
 
         except EOFError:
             break
-    # png_images = []
-    # for img_arr in images:
-    #     png_buffer = io.BytesIO()
-    #     image = Image.fromarray(img_arr)
-    #     image.save(png_buffer, format='png')
-    #     png_images.append(png_buffer.seek(0))
+
     return render(request, 'hsi/details.html', {'imageurls': images,
-                                                'imgnames': imagenames})
+                                                'imgnames': imagenames,
+                                                'cube': cube,
+                                                'wavelengths': wavelengths,
+                                                'metadata': metadata})
 
 def show_home(request):
     imagenames = []
     spectralimg = BinaryImages.objects.all()
     for img in spectralimg:
         imagenames.append(img.filename)
-    return render(request, 'hsi/home.html', {'imgnames' : imagenames})
+    return render(request, 'hsi/home.html', {'imgnames': imagenames})
 

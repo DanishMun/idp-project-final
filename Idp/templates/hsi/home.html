@@ -63,32 +63,7 @@
 
                   <!-- Main-menu -->
                   <div class="main-menu d-none d-md-block">
-                    <nav>
-                      <ul id="navigation">
-                        <li><a href="index.html">Home</a></li>
 
-                        <li><a href="about.html">info</a></li>
-                      </ul>
-                    </nav>
-                  </div>
-                </div>
-                <div class="col-xl-2 col-lg-2 col-md-4">
-                  <div class="header-right-btn f-right d-none d-lg-block">
-                    <i class="fas fa-search special-tag"></i>
-                    <div class="search-box">
-                      <form action="#">
-                        <input type="text" placeholder="Search" />
-                      </form>
-                    </div>
-                  </div>
-                </div>
-                <!-- Mobile Menu -->
-                <div class="col-12">
-                  <div class="mobile_menu d-block d-md-none"></div>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
       <!-- Header End -->
@@ -97,22 +72,12 @@
     <main>
       <!-- Trending Area Start -->
       <div class="trending-area fix">
-        <div class="container">
+        <div class="container p-5">
           <div class="trending-main">
             <!-- Trending Tittle -->
             <div class="row">
               <div class="col-lg-12">
-                <div class="trending-tittle">
-                  <strong>Hsi images</strong>
-                  <!-- <p>Rem ipsum dolor sit amet, consectetur adipisicing elit.</p> -->
-                  <div class="trending-animated">
-                    <ul id="js-news" class="js-hidden">
-                      <li class="news-item">
-                        Here we can see all the png images extracted from tif.
-                      </li>
-                    </ul>
-                  </div>
-                </div>
+
               </div>
             </div>
             <div class="row">
@@ -238,7 +203,7 @@
                       {% for name in imgnames %}
                         <a
                         href="#"
-                        class="list-group-item list-group-item-action flex-column align-items-start active"
+                        class="list-group-item list-group-item-action flex-column align-items-start imgdetail active"
                       >
                         <div class="d-flex w-100 justify-content-between">
                           <h5 class="imgname mb-1" id="imgdetails">{{ name }}</h5>
